@@ -7,8 +7,9 @@ Copy .env.example to .env and populate all variables.
 
 ## Usage
 
-### Run migrations
+### List galleries
 
+To read galleries from the SQL database and output as JSON:
 ```
-npm run migrate
+npm run gallery list
 ```
