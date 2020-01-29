@@ -7,20 +7,7 @@ select
   g.published_at,
   g.image_portal_urls,
   gt.title,
-  gt.description,
-  array(
-    select
-      json_build_object(
-        'europeana_record_id', europeana_record_id,
-        'url', url
-      ) image
-    from
-      gallery_images gi
-    where
-      gi.gallery_id = g.id
-    order by
-      position asc
-  ) images
+  gt.description
 from
   galleries g
   left join gallery_translations gt on gt.gallery_id = g.id
@@ -33,11 +20,9 @@ order by
 
 const excludeImagesFromHasViews = (galleries) => {
   for (const gallery of galleries.rows) {
-    for (const imagePortalUrl of gallery.image_portal_urls) {
-      if (imagePortalUrl.includes('?view=')) {
-        // TODO
-      }
-    }
+    gallery['image_portal_urls'] = gallery['image_portal_urls'].filter((imagePortalUrl) => {
+      return !imagePortalUrl.includes('?view=');
+    });
   }
   return galleries;
 };
