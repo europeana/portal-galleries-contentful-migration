@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const { contentfulClient } = require('./config');
 
 const langMap = (data, locale = 'en-GB') => {
@@ -21,7 +23,7 @@ const dataForGallery = (gallery, images) => {
   };
 };
 
-module.exports = async(gallery, images) => {
+const create = async(gallery, images) => {
   const data = dataForGallery(gallery, images);
   const contentfulConnection = await contentfulClient.connect();
 
@@ -29,4 +31,22 @@ module.exports = async(gallery, images) => {
   await entry.publish();
 
   return entry;
+};
+
+const cli = async(args) => {
+  const galleryJsonPath = args[0];
+  const imageIds = args[1];
+
+  const galleryJson = await fs.readFileSync(galleryJsonPath, 'utf8');
+  const gallery = JSON.parse(galleryJson);
+  const images = imageIds.split(',');
+
+  const entry = await create(gallery, images);
+
+  console.log(JSON.stringify(entry, null, 2));
+};
+
+module.exports = {
+  create,
+  cli
 };

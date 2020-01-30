@@ -41,10 +41,20 @@ const excludeImagesFromHasViews = (galleries) => {
   return galleries;
 };
 
-module.exports = async() => {
+const load = async() => {
   await pgClient.connect();
   const galleries = await pgClient.query(sql);
   await pgClient.end();
 
   return excludeImagesFromHasViews(galleries);
+};
+
+const cli = async() => {
+  const galleries = await load();
+  console.log(JSON.stringify(galleries.rows, null, 2));
+};
+
+module.exports = {
+  load,
+  cli
 };
