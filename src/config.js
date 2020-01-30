@@ -11,10 +11,13 @@ const pgClient = new Client({
 });
 
 const contentfulClient = contentful.createClient({
-  accessToken: process.env.contentfulAccessToken,
-  space: process.env.contentfulSpaceId,
-  environment: process.env.contentfulEnvironmentId
+  accessToken: process.env.contentfulAccessToken
 });
+contentfulClient.connect = async function() {
+  const space = await this.getSpace(process.env.contentfulSpaceId);
+  const environment = await space.getEnvironment(process.env.contentfulEnvironmentId);
+  return environment;
+};
 
 module.exports = {
   pgClient,
