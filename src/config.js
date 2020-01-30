@@ -16,7 +16,10 @@ const contentfulClient = contentful.createClient({
   environment: process.env.contentfulEnvironmentId
 });
 
+const europeanaRecordApiKey = process.env.europeanaRecordApiKey;
+
 module.exports = {
   pgClient,
-  contentfulClient
+  contentfulClient,
+  europeanaRecordApiKey
 };
