@@ -7,7 +7,21 @@ select
   g.published_at,
   g.image_portal_urls,
   gt.title,
-  gt.description
+  gt.description,
+  array(
+    select
+      tt.label
+    from
+      topic_translations tt
+      inner join topics t on tt.topic_id = t.id
+      and tt.locale = 'en'
+      inner join categorisations c on c.topic_id = t.id
+    where
+      c.categorisable_id = g.id
+      and c.categorisable_type = 'Gallery'
+    order by
+      tt.label asc
+  ) topics
 from
   galleries g
   left join gallery_translations gt on gt.gallery_id = g.id
@@ -27,10 +41,20 @@ const excludeImagesFromHasViews = (galleries) => {
   return galleries;
 };
 
-module.exports = async() => {
+const load = async() => {
   await pgClient.connect();
   const galleries = await pgClient.query(sql);
   await pgClient.end();
 
   return excludeImagesFromHasViews(galleries);
+};
+
+const cli = async() => {
+  const galleries = await load();
+  console.log(JSON.stringify(galleries.rows, null, 2));
+};
+
+module.exports = {
+  load,
+  cli
 };
