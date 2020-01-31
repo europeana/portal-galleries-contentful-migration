@@ -27,18 +27,24 @@ const localise = (data) => {
     }
   }
 
-  // TODO: prefer record's LANGUAGE over def and und?
-  if (!map[defaultLocale]) {
-    if (data['def']) {
-      map[defaultLocale] = stringify(data['def']);
-    } else if (data['und']) {
-      map[defaultLocale] = stringify(data['und']);
-    } else {
-      map[defaultLocale] = stringify(Object.values(data)[0]);
-    }
-  }
+  if (!map[defaultLocale]) map[defaultLocale] = fallbackForDefaultLocale(data);
 
   return map;
+};
+
+const fallbackForDefaultLocale = (data) => {
+  let fallback;
+
+  // TODO: prefer record's LANGUAGE over def and und?
+  if (data['def']) {
+    fallback = stringify(data['def']);
+  } else if (data['und']) {
+    fallback = stringify(data['und']);
+  } else {
+    fallback = stringify(Object.values(data)[0]);
+  }
+
+  return fallback;
 };
 
 const stringify = (value) => {
@@ -67,7 +73,7 @@ const dataForImage = (metadata) => {
 
 const image = async(metadata) => {
   const data = dataForImage(metadata);
-
+  return data;
   const contentfulConnection = await contentfulClient.connect();
 
   const entry = await contentfulConnection.createEntry('automatedRecordCard', data);
