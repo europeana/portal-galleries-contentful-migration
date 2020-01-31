@@ -8,7 +8,7 @@ const recordIdFromPortalUrl = (url) => {
 };
 
 const migrateGallery = async(sourceGallery) => {
-  console.log(`Migrating gallery ${gallery.slug}`);
+  console.log(`Migrating gallery ${sourceGallery.slug}`);
 
   const recordIds = sourceGallery['image_portal_urls'].map((url) => recordIdFromPortalUrl(url));
 
