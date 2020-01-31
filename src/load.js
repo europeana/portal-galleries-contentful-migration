@@ -33,7 +33,7 @@ order by
 `;
 
 const excludeImagesFromHasViews = (galleries) => {
-  for (const gallery of galleries.rows) {
+  for (const gallery of galleries) {
     gallery['image_portal_urls'] = gallery['image_portal_urls'].filter((imagePortalUrl) => {
       return !imagePortalUrl.includes('?view=');
     });
@@ -43,15 +43,15 @@ const excludeImagesFromHasViews = (galleries) => {
 
 const load = async() => {
   await pgClient.connect();
-  const galleries = await pgClient.query(sql);
+  const result = await pgClient.query(sql);
   await pgClient.end();
 
-  return excludeImagesFromHasViews(galleries);
+  return excludeImagesFromHasViews(result.rows);
 };
 
 const cli = async() => {
   const galleries = await load();
-  console.log(JSON.stringify(galleries.rows, null, 2));
+  console.log(JSON.stringify(galleries, null, 2));
 };
 
 module.exports = {

@@ -7,14 +7,25 @@ Copy .env.example to .env and populate all variables.
 
 ## Usage
 
-### List galleries source data
+### All at once
+
+To run the full migration scripts:
+```
+npm run gallery migrate
+```
+**WARNING:** This will delete all pre-existing `imageGallery` entries from
+Contentful, and linked `automatedRecordCard` entries.
+
+### Step-by-step
+
+#### List galleries source data
 
 To read galleries from the SQL database and output as JSON:
 ```
 npm run gallery list
 ```
 
-### Create gallery entry
+#### Create gallery entry
 
 To create one image gallery entry in Contentful:
 ```
