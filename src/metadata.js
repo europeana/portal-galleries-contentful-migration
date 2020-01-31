@@ -14,7 +14,7 @@ const imageMetadata = (item) => {
   };
 };
 
-module.exports = async(ids) => {
+const metadata = async(ids) => {
   const query = 'europeana_id:("' + ids.join('" OR "') + '")';
 
   const response = await axios.get(europeanaRecordApiSearchUrl, {
@@ -26,4 +26,15 @@ module.exports = async(ids) => {
   });
 
   return response.data.items.map((item) => imageMetadata(item));
+};
+
+const cli = async(args) => {
+  const ids = args[0].split(',');
+  const galleryMetadata = await metadata(ids);
+  console.log(JSON.stringify(galleryMetadata, null, 2));
+};
+
+module.exports = {
+  metadata,
+  cli
 };
