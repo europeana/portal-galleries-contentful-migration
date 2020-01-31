@@ -4,18 +4,15 @@ const { Client } = require('pg');
 const contentful = require('contentful-management');
 
 const pgClient = new Client({
-  user: process.env.pgUser,
-  host: process.env.pgHost,
-  database: process.env.pgDatabase,
-  port: process.env.pgPort
+  connectionString: process.env['PG_URL']
 });
 
 const contentfulClient = contentful.createClient({
-  accessToken: process.env.contentfulAccessToken
+  accessToken: process.env['CTF_CMA_ACCESS_TOKEN']
 });
 contentfulClient.connect = async function() {
-  const space = await this.getSpace(process.env.contentfulSpaceId);
-  const environment = await space.getEnvironment(process.env.contentfulEnvironmentId);
+  const space = await this.getSpace(process.env['CTF_SPACE_ID']);
+  const environment = await space.getEnvironment(process.env['CTF_ENVIRONMENT_ID']);
   return environment;
 };
 
