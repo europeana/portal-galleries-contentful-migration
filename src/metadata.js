@@ -9,8 +9,8 @@ const imageMetadata = (item) => {
     identifier: item.id,
     name: item.dcTitleLangAware || item.dcDescriptionLangAware,
     creator: item.dcCreatorLangAware,
-    provider: item.dataProvider,
-    thumbnailUrl: item.edmPreview
+    provider: item.dataProvider[0],
+    thumbnailUrl: (item.edmPreview || [])[0]
   };
 };
 
