@@ -1,6 +1,7 @@
 const gallery = {
   list: require('./src/load').cli,
-  create: require('./src/create').cli
+  create: require('./src/create').cli,
+  image: require('./src/image').cli
 };
 
 const act = async(scope, action, args) => {
