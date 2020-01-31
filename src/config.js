@@ -18,5 +18,6 @@ contentfulClient.connect = async function() {
 
 module.exports = {
   pgClient,
-  contentfulClient
+  contentfulClient,
+  defaultLocale: 'en-GB'
 };
