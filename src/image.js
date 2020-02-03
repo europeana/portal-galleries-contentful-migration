@@ -49,10 +49,14 @@ const fallbackForDefaultLocale = (data) => {
 
 const stringify = (value) => {
   let string;
-  if (typeof value === 'string') {
+  const type = typeof value;
+
+  if (type === 'string') {
     string = value;
   } else if (Array.isArray(value)) {
     string = value.join('; ');
+  } else if (type === 'undefined') {
+    return undefined;
   } else {
     throw new Error(`Unhandled value type: ${value}`);
   }
