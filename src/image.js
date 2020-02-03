@@ -56,6 +56,11 @@ const stringify = (value) => {
   } else {
     throw new Error(`Unhandled value type: ${value}`);
   }
+
+  // All fields are short text having a max length of 255 characters. Truncate
+  // if necessary.
+  if (string.length >= 255) string = string.slice(0, 254) + '…';
+
   return string;
 };
 
