@@ -16,7 +16,11 @@ contentfulClient.connect = async function() {
   return environment;
 };
 
+const europeanaRecordApiKey = process.env['EUROPEANA_RECORD_API_KEY'];
+
 module.exports = {
   pgClient,
-  contentfulClient
+  contentfulClient,
+  defaultLocale: 'en-GB',
+  europeanaRecordApiKey
 };

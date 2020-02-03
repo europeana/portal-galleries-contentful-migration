@@ -1,6 +1,8 @@
 const gallery = {
   list: require('./src/load').cli,
   create: require('./src/create').cli,
+  image: require('./src/image').cli,
+  metadata: require('./src/metadata').cli,
   migrate: require('./src/migrate').cli
 };
 
