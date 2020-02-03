@@ -1,3 +1,4 @@
+const { migrationOptions } = require('./config');
 const { create } = require('./create');
 const { image } = require('./image');
 const { load } = require('./load');
@@ -30,11 +31,19 @@ const migrateGallery = async(sourceGallery) => {
   return galleryEntry;
 };
 
+const galleryIsToBeMigrated = (sourceGallery) => {
+  return migrationOptions.gallerySlugs.length === 0 ||
+    migrationOptions.gallerySlugs.includes(sourceGallery.slug);
+};
+
 const migrate = async() => {
   // TODO: delete existing galleries first
+  console.log('Loading galleries from PostgreSQL');
+
   const sourceGalleries = await load();
+
   for (const sourceGallery of sourceGalleries) {
-    await migrateGallery(sourceGallery);
+    if (galleryIsToBeMigrated(sourceGallery)) await migrateGallery(sourceGallery);
   }
 };
 

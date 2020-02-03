@@ -27,7 +27,7 @@ from
   left join gallery_translations gt on gt.gallery_id = g.id
   and gt.locale = 'en'
 where
-  state = 1
+  g.state = 1
 order by
   g.id asc
 `;
