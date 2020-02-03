@@ -32,7 +32,7 @@ const migrateGallery = async(sourceGallery) => {
 };
 
 const galleryIsToBeMigrated = (sourceGallery) => {
-  return migrationOptions.gallerySlugs.length === 0 ||
+  return !Array.isArray(migrationOptions.gallerySlugs) ||
     migrationOptions.gallerySlugs.includes(sourceGallery.slug);
 };
 
