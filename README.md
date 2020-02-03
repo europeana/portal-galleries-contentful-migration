@@ -24,12 +24,22 @@ To read galleries from the SQL database and output as JSON:
 ```
 npm run gallery list
 ```
-### Fetch record metadata
+
+#### Fetch record metadata
 
 To fetch metadata from the Europeana Record API and output as JSON:
 ```
 npm run gallery metadata europeana_id1,europeana_id2,europeana_id3
 ```
+
+#### Create image entry
+
+To create one image entry (as automated record card) in Contentful:
+```
+npm run gallery image tmp/imageMetadata.json
+```
+Where `tmp/imageMetadata.json` is the path to a file containing dumped data
+from the Record API, as formatted by the `gallery metadata` script.
 
 #### Create gallery entry
 
