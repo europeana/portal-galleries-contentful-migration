@@ -1,10 +1,10 @@
 const fs = require('fs');
 
-const { contentfulClient } = require('./config');
+const { contentfulClient, defaultLocale } = require('./config');
 
-const langMap = (data, locale = 'en-GB') => {
+const langMap = (data) => {
   return {
-    [locale]: data
+    [defaultLocale]: data
   };
 };
 
