@@ -1,10 +1,10 @@
 const fs = require('fs');
 
-const { contentfulClient } = require('./config');
+const { contentfulClient, defaultLocale } = require('./config');
 
-const langMap = (data, locale = 'en-GB') => {
+const langMap = (data) => {
   return {
-    [locale]: data
+    [defaultLocale]: data
   };
 };
 
@@ -28,7 +28,7 @@ const create = async(gallery, images) => {
   const contentfulConnection = await contentfulClient.connect();
 
   const entry = await contentfulConnection.createEntry('imageGallery', data);
-  await entry.publish();
+  entry.publish();
 
   return entry;
 };

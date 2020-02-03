@@ -24,8 +24,17 @@ const contentfulDelieveryClient = contetnfulDelivery.createClient({
   environment: process.env['CTF_ENVIRONMENT_ID']
 });
 
+const europeanaRecordApiKey = process.env['EUROPEANA_RECORD_API_KEY'];
+
+const migrationOptions = {
+  gallerySlugs: process.env['MIGRATE_GALLERY_SLUGS'] ? process.env['MIGRATE_GALLERY_SLUGS'].split(',') : false
+};
+
 module.exports = {
   pgClient,
   contentfulManagementClient,
   contentfulDelieveryClient
+  defaultLocale: 'en-GB',
+  europeanaRecordApiKey,
+  migrationOptions
 };
