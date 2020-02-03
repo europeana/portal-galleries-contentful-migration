@@ -18,9 +18,14 @@ contentfulClient.connect = async function() {
 
 const europeanaRecordApiKey = process.env['EUROPEANA_RECORD_API_KEY'];
 
+const migrationOptions = {
+  gallerySlugs: process.env['MIGRATE_GALLERY_SLUGS'] ? process.env['MIGRATE_GALLERY_SLUGS'].split(',') : false
+};
+
 module.exports = {
   pgClient,
   contentfulClient,
   defaultLocale: 'en-GB',
-  europeanaRecordApiKey
+  europeanaRecordApiKey,
+  migrationOptions
 };

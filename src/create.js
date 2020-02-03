@@ -28,7 +28,7 @@ const create = async(gallery, images) => {
   const contentfulConnection = await contentfulClient.connect();
 
   const entry = await contentfulConnection.createEntry('imageGallery', data);
-  await entry.publish();
+  entry.publish();
 
   return entry;
 };

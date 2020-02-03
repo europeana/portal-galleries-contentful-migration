@@ -49,13 +49,22 @@ const fallbackForDefaultLocale = (data) => {
 
 const stringify = (value) => {
   let string;
-  if (typeof value === 'string') {
+  const type = typeof value;
+
+  if (type === 'string') {
     string = value;
   } else if (Array.isArray(value)) {
     string = value.join('; ');
+  } else if (type === 'undefined') {
+    return undefined;
   } else {
     throw new Error(`Unhandled value type: ${value}`);
   }
+
+  // All fields are short text having a max length of 255 characters. Truncate
+  // if necessary.
+  if (string.length >= 255) string = string.slice(0, 254) + '…';
+
   return string;
 };
 
@@ -76,7 +85,7 @@ const image = async(metadata) => {
   const contentfulConnection = await contentfulClient.connect();
 
   const entry = await contentfulConnection.createEntry('automatedRecordCard', data);
-  await entry.publish();
+  entry.publish();
 
   return entry;
 };
