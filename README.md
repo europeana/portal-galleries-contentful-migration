@@ -9,12 +9,13 @@ Copy .env.example to .env and populate all variables.
 
 ### All at once
 
-To run the full migration scripts:
+To run the full migration of all galleries at once:
 ```
 npm run gallery migrate
 ```
 **WARNING:** This will delete all pre-existing `imageGallery` entries from
-Contentful, and linked `automatedRecordCard` entries.
+Contentful, and linked `automatedRecordCard` entries. (TODO: this is not yet
+true, pending addition of the `gallery delete` script.)
 
 ### Step-by-step
 
