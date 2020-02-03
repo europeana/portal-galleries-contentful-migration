@@ -85,7 +85,7 @@ const image = async(metadata) => {
   const contentfulConnection = await contentfulClient.connect();
 
   const entry = await contentfulConnection.createEntry('automatedRecordCard', data);
-  await entry.publish();
+  entry.publish();
 
   return entry;
 };
