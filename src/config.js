@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const { Client } = require('pg');
 const contentfulManagement = require('contentful-management');
-const contetnfulDelivery = require('contentful');
+const contetnfulPreview = require('contentful');
 
 const pgClient = new Client({
   connectionString: process.env['PG_URL']
@@ -18,10 +18,11 @@ contentfulManagementClient.connect = async function() {
   return environment;
 };
 
-const contentfulDelieveryClient = contetnfulDelivery.createClient({
-  accessToken: process.env['CTF_CDA_ACCESS_TOKEN'],
+const contentfulPreviewClient = contetnfulPreview.createClient({
+  accessToken: process.env['CTF_CPA_ACCESS_TOKEN'],
   space: process.env['CTF_SPACE_ID'],
-  environment: process.env['CTF_ENVIRONMENT_ID']
+  environment: process.env['CTF_ENVIRONMENT_ID'],
+  host: 'preview.contentful.com'
 });
 
 const europeanaRecordApiKey = process.env['EUROPEANA_RECORD_API_KEY'];
@@ -33,7 +34,7 @@ const migrationOptions = {
 module.exports = {
   pgClient,
   contentfulManagementClient,
-  contentfulDelieveryClient
+  contentfulPreviewClient,
   defaultLocale: 'en-GB',
   europeanaRecordApiKey,
   migrationOptions
