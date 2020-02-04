@@ -13,11 +13,20 @@ To run the full migration of all galleries at once:
 ```
 npm run gallery migrate
 ```
-**WARNING:** This will delete all pre-existing `imageGallery` entries from
-Contentful, and linked `automatedRecordCard` entries. (TODO: this is not yet
-true, pending addition of the `gallery delete` script.)
-
+**WARNING:** To avoid duplicate entries it is advised to run the `clean` (**Delete any existing galleries**) action
+ before running the migrate action. 
+ 
 ### Step-by-step
+
+### Delete any existing galleries
+
+To delete all galleries and the related record cards from contentful:
+```
+npm run gallery clean
+```
+
+**WARNING:** This will delete all pre-existing `imageGallery` and linked `automatedRecordCard` entries from
+Contentful. `automatedRecordCards` that are used elsewhere will _not_ be deleted.
 
 #### List galleries source data
 

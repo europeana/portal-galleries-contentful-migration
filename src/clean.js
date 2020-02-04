@@ -1,4 +1,4 @@
-const { contentfulManagementClient, contentfulDelieveryClient, defaultLocale } = require('./config');
+const { contentfulManagementClient, contentfulPreviewClient, defaultLocale } = require('./config');
 
 const deleteEntry = async(id) => {
   const contentfulManagementConnection = await contentfulManagementClient.connect();
@@ -15,7 +15,7 @@ const deleteEntry = async(id) => {
   }
 
   console.log(`delete ${entry.sys.contentType.sys.id}`);
-  await entry.delete().catch(async(e) => {
+  entry.delete().catch(async(e) => {
     console.log('error deleting'  + JSON.stringify(e));
     throw `Failed on ${id}`;
   });
@@ -28,8 +28,8 @@ async function asyncFilter(arr, callback) {
 }
 
 // Returns true where a card is used exactly once, otherwise false.
-async function deletableCard(card, contentfulDeliveryConnection) {
-  const cardUsageCount = await contentfulDeliveryConnection.getEntries({
+async function deletableCard(card, contentfulPreviewConnection) {
+  const cardUsageCount = await contentfulPreviewConnection.getEntries({
     'links_to_entry': card.sys.id
   })
     .then((response) => {
@@ -42,8 +42,8 @@ async function deletableCard(card, contentfulDeliveryConnection) {
   return cardUsageCount === 1;
 }
 
-const getEntryPage = async(contentfulDeliveryConnection) => {
-  const entries = await contentfulDeliveryConnection.getEntries({
+const getEntryPage = async(contentfulPreviewConnection) => {
+  const entries = await contentfulPreviewConnection.getEntries({
     'locale': defaultLocale,
     'content_type': 'imageGallery',
     'include': 2
@@ -55,18 +55,21 @@ const getEntryPage = async(contentfulDeliveryConnection) => {
       console.log('error retrieving gallery data. \n' + JSON.stringify(e));
     });
   return entries || [];
-}
+};
+
 const clean = async() => {
-  const contentfulDeliveryConnection = await contentfulDelieveryClient;
+  const contentfulPreviewConnection = await contentfulPreviewClient;
   let entries;
-  while ((entries = await getEntryPage(contentfulDeliveryConnection)).length > 0) {
+  let totalIndex = 0; // Just used for logging
+  while ((entries = await getEntryPage(contentfulPreviewConnection)).length > 0) {
     console.log(`Procesing ${entries.length} galleries for deletion.`);
     for (let index = 0; index < entries.length; index++) {
-      console.log(`Processing gallery ${entries[index].sys.id}`);
+      totalIndex++;
+      console.log(`Processing gallery ${entries[index].sys.id} (${totalIndex})`);
       // delete any associated record cards
       if (entries[index].fields.hasPart) {
         let cards = await asyncFilter(entries[index].fields.hasPart, (card) => {
-          return deletableCard(card, contentfulDeliveryConnection);
+          return deletableCard(card, contentfulPreviewConnection);
         });
         for (let nestedIndex = 0; nestedIndex < cards.length; nestedIndex++) {
           await deleteEntry(cards[nestedIndex].sys.id);

@@ -37,7 +37,6 @@ const galleryIsToBeMigrated = (sourceGallery) => {
 };
 
 const migrate = async() => {
-  // TODO: delete existing galleries first
   console.log('Loading galleries from PostgreSQL');
 
   const sourceGalleries = await load();
