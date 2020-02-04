@@ -1,34 +1,33 @@
 const { contentfulManagementClient, contentfulPreviewClient, defaultLocale } = require('./config');
 
+let contentfulManagementConnection;
+(async function() {
+  contentfulManagementConnection = await Promise.resolve(contentfulManagementClient.connect());
+})();
+const contentfulPreviewConnection = contentfulPreviewClient;
+
 const deleteEntry = async(id) => {
-  const contentfulManagementConnection = await contentfulManagementClient.connect();
   let entry = await contentfulManagementConnection.getEntry(id).catch((e) => {
     console.log(`couldn't load entry: ${id}\n` + e.toString());
     return;
   });
 
   if (entry.sys.publishedVersion) {
-    console.log(`unpublish ${entry.sys.contentType.sys.id}`);
+    console.log(`- Unpublishing ${entry.sys.contentType.sys.id}`);
     entry = await entry.unpublish().catch((e) => {
       console.log('error unpublishing ' + JSON.stringify(e));
     });
   }
 
-  console.log(`delete ${entry.sys.contentType.sys.id}`);
+  console.log(`- Deleting ${entry.sys.contentType.sys.id}`);
   entry.delete().catch(async(e) => {
     console.log('error deleting'  + JSON.stringify(e));
     throw `Failed on ${id}`;
   });
 };
 
-// https://stackoverflow.com/a/46842181/738371
-async function asyncFilter(arr, callback) {
-  const fail = Symbol();
-  return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail);
-}
-
 // Returns true where a card is used exactly once, otherwise false.
-async function deletableCard(card, contentfulPreviewConnection) {
+async function deletableCard(card) {
   const cardUsageCount = await contentfulPreviewConnection.getEntries({
     'links_to_entry': card.sys.id
   })
@@ -42,7 +41,7 @@ async function deletableCard(card, contentfulPreviewConnection) {
   return cardUsageCount === 1;
 }
 
-const getEntryPage = async(contentfulPreviewConnection) => {
+const getEntriesPage = async() => {
   const entries = await contentfulPreviewConnection.getEntries({
     'locale': defaultLocale,
     'content_type': 'imageGallery',
@@ -58,29 +57,24 @@ const getEntryPage = async(contentfulPreviewConnection) => {
 };
 
 const clean = async() => {
-  const contentfulPreviewConnection = await contentfulPreviewClient;
   let entries;
   let totalIndex = 0; // Just used for logging
-  while ((entries = await getEntryPage(contentfulPreviewConnection)).length > 0) {
+  while ((entries = await getEntriesPage()).length > 0) {
     console.log(`Procesing ${entries.length} galleries for deletion.`);
-    for (let index = 0; index < entries.length; index++) {
+    for (const entry of entries) {
       totalIndex++;
-      console.log(`Processing gallery ${entries[index].sys.id} (${totalIndex})`);
+      console.log(`Processing gallery ${entry.sys.id} (${totalIndex})`);
       // delete any associated record cards
-      if (entries[index].fields.hasPart) {
-        let cards = await asyncFilter(entries[index].fields.hasPart, (card) => {
-          return deletableCard(card, contentfulPreviewConnection);
-        });
-        for (let nestedIndex = 0; nestedIndex < cards.length; nestedIndex++) {
-          await deleteEntry(cards[nestedIndex].sys.id);
+      if (entry.fields.hasPart) {
+        for (const card of entry.fields.hasPart) {
+          const deletable = await deletableCard(card);
+          if (deletable) await deleteEntry(card.sys.id);
         }
       }
-      await deleteEntry(entries[index].sys.id);
+      await deleteEntry(entry.sys.id);
     }
   }
 };
-
-
 
 const cli = async() => {
   await clean();

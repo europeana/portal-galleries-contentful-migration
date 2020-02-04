@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const { Client } = require('pg');
 const contentfulManagement = require('contentful-management');
-const contetnfulPreview = require('contentful');
+const contentfulPreview = require('contentful');
 
 const pgClient = new Client({
   connectionString: process.env['PG_URL']
@@ -18,7 +18,7 @@ contentfulManagementClient.connect = async function() {
   return environment;
 };
 
-const contentfulPreviewClient = contetnfulPreview.createClient({
+const contentfulPreviewClient = contentfulPreview.createClient({
   accessToken: process.env['CTF_CPA_ACCESS_TOKEN'],
   space: process.env['CTF_SPACE_ID'],
   environment: process.env['CTF_ENVIRONMENT_ID'],
