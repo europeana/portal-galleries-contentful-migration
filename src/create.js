@@ -1,4 +1,6 @@
 const fs = require('fs');
+const TurndownService = require('turndown');
+const turndownService = new TurndownService();
 
 const { contentfulManagementClient, defaultLocale } = require('./config');
 
@@ -13,7 +15,7 @@ const dataForGallery = (gallery, images) => {
     fields: {
       name: langMap(gallery.title),
       identifier: langMap(gallery.slug),
-      description: langMap(gallery.description),
+      description: langMap(turndownService.turndown(gallery.description)),
       genre: langMap(gallery.topics),
       hasPart: langMap(images.map((id) => {
         return { sys: { type: 'Link', linkType: 'Entry', id } };
