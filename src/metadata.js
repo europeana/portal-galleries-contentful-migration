@@ -21,6 +21,7 @@ const metadata = async(ids) => {
     params: {
       query,
       profile: 'minimal',
+      rows: 100,
       wskey: europeanaRecordApiKey
     }
   });
