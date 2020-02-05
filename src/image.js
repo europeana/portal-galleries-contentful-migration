@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const { contentfulClient, defaultLocale } = require('./config');
+const { contentfulManagementClient, defaultLocale } = require('./config');
 
 const locales = require('../data/locales');
 
@@ -82,7 +82,7 @@ const dataForImage = (metadata) => {
 
 const image = async(metadata) => {
   const data = dataForImage(metadata);
-  const contentfulConnection = await contentfulClient.connect();
+  const contentfulConnection = await contentfulManagementClient.connect();
 
   const entry = await contentfulConnection.createEntry('automatedRecordCard', data);
   entry.publish();

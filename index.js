@@ -1,4 +1,5 @@
 const gallery = {
+  clean: require('./src/clean').cli,
   list: require('./src/load').cli,
   create: require('./src/create').cli,
   image: require('./src/image').cli,
