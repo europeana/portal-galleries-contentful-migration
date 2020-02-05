@@ -1,6 +1,6 @@
 {
   "name": "@europeana/portal-galleries-contentful-migration",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Node.js scripts to migrate Portal galleries to from SQL to Contentful",
   "main": "index.js",
   "scripts": {
