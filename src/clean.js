@@ -7,11 +7,11 @@ let contentfulManagementConnection;
 const contentfulPreviewConnection = contentfulPreviewClient;
 
 const deleteEntry = async(id) => {
-  let entry = await contentfulManagementConnection.getEntry(id).catch((e) => {
-    console.log(`couldn't load entry: ${id}\n` + e.toString());
+  let entry = await contentfulManagementConnection.getEntry(id).catch(() => {
+    console.log(`- couldn't load entry "${id}" skipping deletion`);
     return;
   });
-
+  if (!entry) return;
   if (entry.sys.publishedVersion) {
     console.log(`- Unpublishing ${entry.sys.contentType.sys.id}`);
     entry = await entry.unpublish().catch((e) => {
